@@ -1,0 +1,54 @@
+import time
+import requests
+import json
+
+# This function makes a request to the Alpha Vantage API to get the daily RSI of SPY
+def get_daily_rsi():
+  api_key = "YOUR_API_KEY"
+  function = "RSI"
+  symbol = "SPY"
+  interval = "daily"
+  time_period = "14"
+  series_type = "close"
+  url = f"https://www.alphavantage.co/query?function={function}&symbol={symbol}&interval={interval}&time_period={time_period}&series_type={series_type}&apikey={api_key}"
+  response = requests.get(url)
+  data = json.loads(response.text)
+  rsi = data["Technical Analysis: RSI"][list(data["Technical Analysis: RSI"].keys())[0]]["RSI"]
+  return float(rsi)
+
+# This function makes a request to the Alpha Vantage API to get the latest price of SPY
+def get_latest_price():
+  api_key = "YOUR_API_KEY"
+  function = "GLOBAL_QUOTE"
+  symbol = "SPY"
+  url = f"https://www.alphavantage.co/query?function={function}&symbol={symbol}&apikey={api_key}"
+  response = requests.get(url)
+  data = json.loads(response.text)
+  price = data["Global Quote"]["05. price"]
+  return float(price)
+
+# This function places a buy order for 1 share of SPY at the latest price
+def place_buy_order():
+  # Replace this with your own code to place a buy order for 1 share of SPY
+  print("Placing buy order for 1 share of SPY at the latest price...")
+
+# This function places a sell order for 1 share of SPY at the latest price
+def place_sell_order():
+  # Replace this with your own code to place a sell order for 1 share of SPY
+  print("Placing sell order for 1 share of SPY at the latest price...")
+
+while True:
+  # Get the latest daily RSI of SPY
+  daily_rsi = get_daily_rsi()
+  print(f"Daily RSI of SPY: {daily_rsi}")
+
+  # If the daily RSI is below 30, place a buy order for 1 share of SPY
+  if daily_rsi < 30:
+    place_buy_order()
+
+  # If the daily RSI is above 70, place a sell order for 1 share of SPY
+  elif daily_rsi > 70:
+    place_sell_order()
+
+  # Sleep for 1 hour before checking the daily RSI again
+  time.sleep(3600)
